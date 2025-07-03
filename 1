@@ -1,0 +1,112 @@
+<?php
+session_start();
+?>
+<?php
+//$usercategory=$_GET['usercategory'];
+
+        if(isset($_POST['username']) && isset($_POST['password'])){
+                $_SESSION['username']=$_POST['username'];
+
+//        $app_user = "cn=Admin,dc=ldap,dc=iitm,dc=ac,dc=in";
+//        $app_pass = "00o00opio0+$0";
+$app_user = "cn=ebind,ou=bind,dc=ldap,dc=iitm,dc=ac,dc=in";
+$app_pass = "pgSiitmcc";
+
+
+        $username = $_POST['username'];
+        $password = $_POST['password'];
+
+        $userdn = '';
+
+        // Connect to LDAP service
+        $conn_status = ldap_connect('eldap.iitm.ac.in', '389');
+        if ($conn_status === FALSE) {
+            die("Couldn't connect to LDAP service");
+
+}
+ldap_set_option($conn_status, LDAP_OPT_PROTOCOL_VERSION, 3);
+ldap_set_option($conn_status, LDAP_OPT_REFERRALS, 0);
+
+         $bind_status = ldap_bind($conn_status, $app_user, $app_pass);
+         if ($bind_status === FALSE) {
+         die("Couldn't bind to LDAP as application user");
+ }
+ $query = "cn=" . $username . "";
+        $search_base = "dc=ldap,dc=iitm,dc=ac,dc=in";
+        $search_status = ldap_search($conn_status, $search_base, $query, array('dn') );
+        if ($search_status === FALSE) {
+           die("Search on LDAP failed");
+        }
+
+        $result = ldap_get_entries($conn_status, $search_status);
+        if ($result === FALSE) {
+            die("Couldn't pull search results from LDAP");
+        }
+
+        if ((int) @$result['count'] > 0) {
+            $userdn = $result[0]['dn'];
+        }
+
+        if (trim((string) $userdn) == '') {
+            die("Empty DN. Something is wrong.");
+        }
+
+        @$auth_status = ldap_bind($conn_status, $userdn, $password);
+        if ($auth_status === FALSE) {
+            die("Couldn't bind to LDAP as user!");
+        }
+    //    header('Location: table.php');
+        header("Location:registrationform.php?username=$username");
+
+        }
+
+
+
+<link href="bootstrap.min.css" rel="stylesheet" id="bootstrap-css">
+<script src="bootstrap.min.js"></script>
+<script src="jquery.min.js"></script>
+
+<link href="style.css" rel="stylesheet">
+<link href="css.css" rel="stylesheet">
+
+<div class="container register">
+                <div class="row">
+
+<div class="slogo">
+<center><img src="newlogo.png"></center>
+</div>
+
+                    <div class="col-md-12 register-right" style="border:0px solid blue;">
+                        <div class="tab-content" id="myTabContent" style="border:0px solid red;">
+                            <div class="tab-pane fade show active" id="home" role="tabpanel" aria-labelledby="home-tab" style="border:0px solid blue;">
+<h5 class="register-heading">
+Grievance Redressal Login for Faculty
+</h5>
+                                <div class="row register-form" style="">
+                                    <div class="col-md-10" style="border:0px solid blue">
+<center>                                        <div class="form-group" style="border:0px solid red;">
+					<form method="post" action="">
+                                            <input type="text" name="username" class="form-control" placeholder="ADS/Email Username *" value="" required/>
+                                        </div><br>
+                                        <div class="form-group">
+                                            <input type="password" name="password" class="form-control" placeholder="Password *" value="" required/>
+                                        </div>
+                                        <div class="form-group" style="margin-bottom:1px !important;">
+                                        <input type="submit" class="btnRegister"  value="Login" formaction="">
+					</div>
+					</form>
+                                    </div>
+                    </div>
+                </div>
+</div>
+</div>
+</div>
+            
+<br><center><font style="font-size:16px;padding:0px !important;color:white;padding:0px;">Copyright © 2019 All rights reserved | Developed and Maintained by <a href="https://eservices.iitm.ac.in" style="color:white;">Eservices,Computer Centre,IITM</a></font></center>
+</div>
+
+
+<?php
+$_SESSION['usernamee'] =$_POST['username'];
+?>
+

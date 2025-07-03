@@ -1,0 +1,154 @@
+<?php
+
+if(isset($_POST['username']) && isset($_POST['password']))
+{
+
+$ldaphost = "ldap://essrv001.iitm.ac.in";
+$ldapconn = ldap_connect($ldaphost);
+$username = $_POST['username'];
+$password = $_POST['password'];
+
+$ldaprdn = 'iitm' . "\\" . $username;
+
+ldap_set_option($ldapconn, LDAP_OPT_PROTOCOL_VERSION, 3);
+ldap_set_option($ldapconn, LDAP_OPT_REFERRALS, 0);
+
+$bind = ldap_bind($ldapconn, $ldaprdn, $password);
+
+if ($bind)
+
+{
+$filter="(sAMAccountName=$username)";
+//echo $filter;
+$dn[]='OU=cc,OU=projstaff,DC=IITM,DC=AC,DC=IN';
+$dn[]='OU=employee,DC=IITM,DC=AC,DC=IN';
+$dn[]='OU=People,DC=IITM,DC=AC,DC=IN';
+$dn[]='OU=official,DC=IITM,DC=AC,DC=IN';
+
+$id[] = $ldapconn;
+$id[] = $ldapconn;
+$id[] = $ldapconn;
+$id[] = $ldapconn;
+
+$result = ldap_search($id,$dn,$filter);
+//echo $result;
+$search = false;
+
+foreach($result as $value)
+{
+if(ldap_count_entries($ldapconn,$value)>0)
+{
+$search = $value;
+break;
+}
+}
+if($search)
+{
+$info = ldap_get_entries($ldapconn, $search);
+for ($i=0; $i<$info["count"]; $i++)
+{
+if($info['count'] > 1)
+break;
+
+$j=$info[$i]["givenname"][0];
+header("Location:registration.php");
+
+}
+}
+}//bind close
+
+else
+{
+$message = "Username and/or Password incorrect.\\nTry again.";
+echo "<script type='text/javascript'>alert('$message');</script>";
+}
+
+}
+?>
+
+
+<link href="bootstrap.min.css" rel="stylesheet" id="bootstrap-css">
+<script src="bootstrap.min.js"></script>
+<script src="jquery.min.js"></script>
+
+
+<link href="style.css" rel="stylesheet" id="bootstrap-css">
+
+<div class="container register">
+                <div class="row">
+                    <div class="col-md-3 register-left">
+                        
+<br><br><br><br>
+                        <h6>Welcome to Work Request Portal</h6><br>
+                        <h6>Login using your ADS/EMAIL credentials</h6>
+<!--                        <input type="submit" name="" value="Login"/><br/>-->
+                    </div>
+                    <div class="col-md-9 register-right">
+<!--                        <ul class="nav nav-tabs nav-justified" id="myTab" role="tablist">
+                            <li class="nav-item">
+                                <a class="nav-link active" id="home-tab" data-toggle="tab" href="" role="tab" aria-controls="home">Logout</a>
+                            </li>
+                        </ul>-->
+                        <div class="tab-content" id="myTabContent">
+                            <div class="tab-pane fade show active" id="home" role="tabpanel" aria-labelledby="home-tab">
+                                <h3 class="register-heading">Login</h3>
+                                <div class="row register-form">
+                                    <div class="col-md-6" style="margin-left:12%;">
+                                        <div class="form-group">
+					<form method="post" action="">
+                                            <input type="text" name="username" class="form-control" placeholder="Username *" style="width:140% !important;" value="" required/>
+                                        </div>
+                                        <div class="form-group">
+                                            <input type="password" name="password" class="form-control" placeholder="Password *" style="width:140% !important; "value="" required/>
+                                        </div>
+                                        <input type="submit" class="btnRegister"  value="Login" formaction="">
+					</form>
+                                    </div>
+                                </div>
+                            </div>
+<!--                            <div class="tab-pane fade show" id="profile" role="tabpanel" aria-labelledby="profile-tab">
+                                <h3  class="register-heading">Apply as a Hirer</h3>
+                                <div class="row register-form">
+                                    <div class="col-md-6">
+                                        <div class="form-group">
+                                            <input type="text" class="form-control" placeholder="First Name *" value="" />
+                                        </div>
+                                        <div class="form-group">
+                                            <input type="text" class="form-control" placeholder="Last Name *" value="" />
+                                        </div>
+                                        <div class="form-group">
+                                            <input type="email" class="form-control" placeholder="Email *" value="" />
+                                        </div>
+                                        <div class="form-group">
+                                            <input type="text" maxlength="10" minlength="10" class="form-control" placeholder="Phone *" value="" />
+                                        </div>
+
+
+                                    </div>
+                                    <div class="col-md-6">
+                                        <div class="form-group">
+                                            <input type="password" class="form-control" placeholder="Password *" value="" />
+                                        </div>
+                                        <div class="form-group">
+                                            <input type="password" class="form-control" placeholder="Confirm Password *" value="" />
+                                        </div>
+                                        <div class="form-group">
+                                            <select class="form-control">
+                                                <option class="hidden"  selected disabled>Please select your Sequrity Question</option>
+                                                <option>What is your Birthdate?</option>
+                                                <option>What is Your old Phone Number</option>
+                                                <option>What is your Pet Name?</option>
+                                            </select>
+                                        </div>
+                                        <div class="form-group">
+                                            <input type="text" class="form-control" placeholder="`Answer *" value="" />
+                                        </div>
+                                        <input type="submit" class="btnRegister"  value="Register"/>
+                                    </div>
+                                </div>
+                            </div>-->
+                        </div>
+                    </div>
+                </div>
+
+            </div>
