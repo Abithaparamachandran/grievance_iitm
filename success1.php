@@ -189,11 +189,7 @@ if($image_width <= 600 && $image_height<= 500)
                 }
                 else echo '';
        }
-
-
-
-
-                }
+              }
 
        }
 	}
@@ -228,10 +224,10 @@ $mail = new PHPMailer;
 
 $mail->CharSet = 'UTF-8';
 $mail->isSMTP();
-$mail->Host = 'smtp2.iitm.ac.in';
-$mail->SMTPAuth = true;
-$mail->Username = 'ebind';
-$mail->Password = 'pgSiitmcc';
+$mail->Host = '***';
+$mail->SMTPAuth = ***;
+$mail->Username = '***';
+$mail->Password = '***';
 $mail->SMTPSecure = 'tls';
 $mail->Port = 25;
 
@@ -250,7 +246,7 @@ if($usercategory=="faculty"){
 $mail->addAddress("deanadmn@iitm.ac.in");
 $mail->addAddress("registrar@iitm.ac.in");
 $mail->addAddress("director@iitm.ac.in");
-//$mail->addAddress("ccprj05@iitm.ac.in");
+
 }
 elseif($usercategory=="staff"){
 $mail->addAddress("registrar@iitm.ac.in");
@@ -265,7 +261,6 @@ else{
 	$mail->addAddress("deanar@iitm.ac.in");
 	$mail->addAddress("deanar@smail.iitm.ac.in");
         $mail->addAddress("director@iitm.ac.in");
-//$mail->addAddress("ccprj05@iitm.ac.in");
 }
 
 $mail->isHTML(true);
