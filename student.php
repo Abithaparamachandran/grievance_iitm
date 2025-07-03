@@ -11,11 +11,8 @@ ob_start();
 session_start();
         if(isset($_POST['username']) && isset($_POST['password'])){
                 $_SESSION['username']=$_POST['username'];
-
-//        $app_user = "cn=Admin,dc=ldap,dc=iitm,dc=ac,dc=in";
-//        $app_pass = "00o00opio0+$0";
-$app_user = "cn=ebind,ou=bind,dc=ldap,dc=iitm,dc=ac,dc=in";
-$app_pass = "pgSiitmcc";
+$app_user = "***";
+$app_pass = "***";
 
 
         $username = $_POST['username'];
@@ -24,7 +21,7 @@ $app_pass = "pgSiitmcc";
         $userdn = '';
 
         // Connect to LDAP service
-        $conn_status = ldap_connect('eldap.iitm.ac.in', '389');
+        $conn_status = ldap_connect('***', '389');
         if ($conn_status === FALSE) {
             die("Couldn't connect to LDAP service");
 
@@ -37,7 +34,7 @@ ldap_set_option($conn_status, LDAP_OPT_REFERRALS, 0);
          die("Couldn't bind to LDAP as application user");
  }
 $query = "cn=" . $username . "";
-        $search_base = "ou=student,dc=ldap,dc=iitm,dc=ac,dc=in";
+        $search_base = "***";
         $search_status = ldap_search($conn_status, $search_base, $query, array('dn') );
         if ($search_status === FALSE) {
            die("Search on LDAP failed");
